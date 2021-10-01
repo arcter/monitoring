@@ -1,0 +1,8 @@
+all:
+ children:
+  monitoring-nodes:
+    hosts:
+      192.168.255.246:
+        ansible_user: arcter
+        ansible_become: yes
+        ansible_host: beholder-test

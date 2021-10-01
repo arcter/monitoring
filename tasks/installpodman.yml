@@ -1,0 +1,23 @@
+---
+- name: Add the Podman GPG key
+  ansible.builtin.apt_key:
+    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key
+    state: present
+
+- name: Add the official Podman Ubuntu 20.04 repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /
+    state: present
+
+- name: "Podman: Update and upgrade apt packages"
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install basic packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - podman

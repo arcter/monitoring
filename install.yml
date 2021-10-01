@@ -1,0 +1,6 @@
+---
+- name: Install podman
+  hosts:   monitoring-nodes
+  tasks:
+    - name: install podman 
+      import_tasks: tasks/installpodman.yml
