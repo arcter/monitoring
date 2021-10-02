@@ -1,0 +1,3 @@
+# Jó ez így, dolgozz csak egy mappával beljebb @robotka
+import snippet.d/*.conf
+import site.d/*.conf

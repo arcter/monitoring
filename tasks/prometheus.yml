@@ -1,0 +1,40 @@
+---
+- name: Create dirs
+  become: true
+  file:
+    path: /docker/{{ item }}
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - prometheus
+    - alertmanager
+
+- name: Copy config
+  become: true
+  template:
+    src: etc/{{ item }}
+    dest: /docker/
+    owner: root
+    group: root
+    mode: 0755
+  with_fileglob:
+    - "/prometheus/"
+    - "/alertmanager/"
+
+- name: Change file ownership, group and permissions
+  ansible.builtin.file:
+    path: /docker/{{ item }}/{{ item }}
+    owner: foo
+    group: foo
+    mode: 0777
+  with_items:
+    - prometheus
+    - alertmanager
+
+- name: Run the scripts
+  ansible.builtin.script: /docker/{{ item }}/{{ item }}
+  with_items:
+    - prometheus
+    - alertmanager
