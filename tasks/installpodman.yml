@@ -1,25 +1,27 @@
 ---
-- name: Add the Podman GPG key
+- name: Install GPG
   become: true
-  ansible.builtin.apt_key:
-    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key
+  package:
+    name: gnupg
     state: present
 
-- name: Add the official Podman Ubuntu 20.04 repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /
-    state: present
+- include_tasks: "installpodmanonoldubuntu.yml"
+  when:  ansible_distribution == "Ubuntu" and ansible_distribution_version == "20.04"
 
-- name: "Podman: Update and upgrade apt packages"
+- name: Install podman
   become: true
-  apt:
-    upgrade: yes
-    update_cache: yes
-
-- name: Install basic packages
   package:
     name: "{{ item }}"
     state: present
   with_items:
     - podman
+
+- name: Copy registries config
+  become: true
+  copy:
+    src: files/etc/containers/registries.conf
+    dest: /etc/containers/registries.conf
+    owner: root
+    group: root
+    mode: 0644
+

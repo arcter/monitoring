@@ -1,12 +1,9 @@
 ---
-- name: Install Caddy
+- name: Install GPG
   become: true
   package:
-    name: {{ item }}
+    name: gnupg
     state: present
-  with_items:
-    - caddy
-
 
 - name: Add the offical Caddy repository
   become: true
@@ -22,6 +19,14 @@
   ansible.builtin.apt_key:
     url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
     state: present
+
+- name: Install Caddy
+  become: true
+  package:
+    name: {{ item }}
+    state: present
+  with_items:
+    - caddy
 
 - name: Copy config
   become: true

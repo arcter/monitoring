@@ -13,8 +13,8 @@
 
 - name: Copy config
   become: true
-  template:
-    src: etc/{{ item }}
+  copy:
+    src: files/etc/{{ item }}
     dest: /docker/
     owner: root
     group: root
