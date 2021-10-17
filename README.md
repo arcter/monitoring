@@ -1,1 +1,1 @@
-The purpose of this repository is to set up a monitoring and alerting system for the core SCH network infrastructure as possible.
+The purpose of this repository is to set up a monitoring and alerting system for SCH.
