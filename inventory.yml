@@ -1,8 +1,8 @@
 all:
- children:
-  monitoring-nodes:
-    hosts:
-      192.168.255.246:
+ hosts:
+      monitor:
+        ansible_host:  monitor.sch.bme.hu
         ansible_user: arcter
         ansible_become: yes
-        ansible_host: beholder-test
+        ansible_port: 10022
+        hostname: monitor

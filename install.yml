@@ -1,6 +1,13 @@
 ---
-- name: Install podman
-  hosts:   monitoring-nodes
-  tasks:
-    - name: install podman 
+- name: Bootstrap monitor
+  hosts: monitor
+  tasks: 
+    - name: Apt updtate & upgrade
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install podman
       import_tasks: tasks/installpodman.yml
+
