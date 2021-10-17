@@ -6,3 +6,8 @@ all:
         ansible_become: yes
         ansible_port: 10022
         hostname: monitor
+      monitor_arcter:
+        ansible_host:  192.168.255.22
+        ansible_user: arcter
+        ansible_become: yes
+        hostname: sakura

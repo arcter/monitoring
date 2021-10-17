@@ -1,13 +1,11 @@
 - name: Copy registries config
-  template:
-    src: etc/containers/registries.conf
+  become: true
+  copy:
+    src: files/etc/containers/registries.conf
     dest: /etc/containers/registries.conf
     owner: root
     group: root
     mode: 0644
-    # backing up in case the need to recover
-    backup: true
-  become: true
 
 - name: Enable podman socket service
   systemd:

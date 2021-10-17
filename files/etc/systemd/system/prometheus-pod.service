@@ -1,0 +1,21 @@
+[Unit]
+Description=Prometheus podman runner
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus-podman
+Group=prometheus-podman
+Type=simple
+ExecStart=podman run \
+  --rm \
+  --name prometheus-server \
+  --net prometheus \
+  --publish 9090:9090 \
+  --volume /etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml \
+  --volume /etc/prometheus/alert-rules:/etc/prometheus/alert-rules \
+  --volume /mnt/prom_short_term/data:/prometheus/data \
+prom/prometheus 
+
+[Install]
+WantedBy=multi-user.target

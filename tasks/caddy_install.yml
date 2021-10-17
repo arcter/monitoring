@@ -1,0 +1,28 @@
+---
+- name: Install GPG
+  become: true
+  package:
+    name: gnupg
+    state: present
+
+- name: Add the Caddy GPG key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+    state: present
+
+
+- name: Add the offical Caddy repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    state: present
+  loop:
+  -  deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+  -  deb-src https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+
+- name: Install Caddy
+  become: true
+  package:
+    name: caddy
+    state: present
