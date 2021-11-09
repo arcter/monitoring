@@ -14,6 +14,18 @@
     - name: Configuring podman
       import_tasks: tasks/podman_config.yml
 
+- name: Set up Prometheus
+  hosts: monitor_arcter
+  tasks:
+    - name: Set up Prometheus container
+      import_tasks: tasks/prometheus.yml
+
+- name: Set up Alertmanager
+  hosts: monitor_arcter
+  tasks:
+    - name: Set up Alertmanager container
+      import_tasks: tasks/alertmanager.yml
+
 - name: Install & setup caddy
   hosts: monitor_arcter
   tasks:
@@ -24,26 +36,29 @@
       service:
         name: caddy
         state: stopped
-
-#     - name: Copy config
-#       become: true
-#       copy:
-#         src: files/etc/{{ item }}
-#         dest: /etc/{{ item }}
-#         owner: root
-#         group: root
-#         mode: 0755
-#       with_fileglob:
-#       - "/caddy/"
-
-#     - name: Restart service
-#       become: True
-#       systemd:
-#         name: caddy
-#         masked: no
-#         enabled: yes
-#         state: started
-
-# - name: Setup Prometheus
-#   hosts: monitor
-#   tasks:  
+    - name: Copy config
+      become: true
+      copy:
+        src: files/etc/{{ item }}
+        dest: /etc/{{ item }}
+        owner: root
+        group: root
+        mode: 0755
+      with_fileglob:
+      - "caddy"
+    - name: Restart service
+      become: True
+      systemd:
+        name: caddy
+        masked: no
+        enabled: yes
+        state: started
+- name: Setup Grafana
+  hosts: monitor_arcter
+  become: True
+  vars_files:
+  - vars/secrets.yml
+  tasks:
+    - import_tasks: tasks/postgress.yml
+    - import_tasks: tasks/grafana.yml
+    

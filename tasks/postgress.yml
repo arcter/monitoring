@@ -1,0 +1,25 @@
+---
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root 
+  loop:
+    - /mnt
+    - /mnt/grafana
+    - /mnt/grafana/postgresql_data
+
+- name: Create postgress container
+  containers.podman.podman_container:
+    name: postgres
+    image: postgres:11
+    state: started
+    publish:
+      - 0.0.0.0:5432:5432
+    env:
+      POSTGRES_PASSWORD: "{{ POSTGRES_PASSWORD }}"
+    volume:
+      - /mnt/grafana/postgresql_data:/var/lib/postgresql/data
+    

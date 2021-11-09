@@ -1,0 +1,1645 @@
+# This file is generated. Some meta:
+# Time: 2021-06-24T16:53:21.348119
+# Host: runner-jzki11j--project-2817-concurrent-0
+# Data dir commiter: Miklós Tóth
+# Data dir commit hash: 5259e1a0c9a43bc77daf9826e32760bd7b003b65
+# Prometheus server configuration
+# See more: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+global:
+  scrape_interval:     60s
+  evaluation_interval: 60s # Evaluate rules every 60 seconds
+  scrape_timeout:      30s
+  external_labels:
+    monitor: "beholder" # for federation purposes
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - "alert-rules/*.yml"
+
+scrape_configs:
+- job_name: elasticsearch@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: elasticsearch-2
+      job: node
+      service_name: elasticsearch
+    targets:
+    - 10.0.150.150:9100
+- job_name: elasticsearch@elasticsearch
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: elasticsearch-2
+      job: elasticsearch
+      service_name: elasticsearch
+    targets:
+    - 10.0.150.150:9114
+- job_name: term@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: term
+      job: node
+      service_name: term
+    targets:
+    - 10.0.209.112:9100
+- job_name: memory-alpha@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: memory-alpha
+      job: node
+      service_name: memory-alpha
+    targets:
+    - 10.0.208.49:9100
+- job_name: gitlab-runner@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: kszk-gitlab-runner
+      job: node
+      service_name: gitlab-runner
+    targets:
+    - 152.66.209.225:9100
+- job_name: gitlab-runner@gitlab-runner
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: kszk-gitlab-runner
+      job: gitlab-runner
+      service_name: gitlab-runner
+    targets:
+    - 152.66.209.225:5487
+- job_name: database@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: db
+      job: node
+      service_name: database
+    targets:
+    - db.sch.bme.hu:9100
+- job_name: database@mysql
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: db
+      job: mysql
+      service_name: database
+    targets:
+    - db.sch.bme.hu:9104
+- job_name: database@postgres
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: db
+      job: postgres
+      service_name: database
+    targets:
+    - db.sch.bme.hu:9187
+- job_name: gitlab@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: git.sch.bme.hu
+      job: node
+      service_name: gitlab
+    targets:
+    - 10.0.208.62:9100
+- job_name: gitlab@redis
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: git.sch.bme.hu
+      job: redis
+      service_name: gitlab
+    targets:
+    - 10.0.208.62:9121
+- job_name: gitlab@postgres
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: git.sch.bme.hu
+      job: postgres
+      service_name: gitlab
+    targets:
+    - 10.0.208.62:9187
+- job_name: gitlab@gitlab
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: git.sch.bme.hu
+      job: gitlab
+      service_name: gitlab
+    targets:
+    - 10.0.208.62:9168
+- job_name: gitlab@puma
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: git.sch.bme.hu
+      job: puma
+      service_name: gitlab
+    targets:
+    - 10.0.208.62:8083
+- job_name: x-ray@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: x-ray
+      job: node
+      service_name: x-ray
+    targets:
+    - 10.0.209.150:9100
+- job_name: memory-beta@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: memory-beta
+      job: node
+      service_name: memory-beta
+    targets:
+    - 10.0.208.50:9100
+- job_name: teamspeak@teamspeak
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: teamspeak.sch.bme.hu
+      job: teamspeak
+      service_name: teamspeak
+    targets:
+    - 10.0.208.224:9189
+- job_name: sch-websites@blackbox#http_2xx
+  metrics_path: /probe
+  params:
+    module:
+    - http_2xx
+  relabel_configs:
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - source_labels:
+    - __param_target
+    target_label: instance
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      job: blackbox
+      service_name: sch-websites
+    targets:
+    - https://jatszohaz.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: sch-websites
+    targets:
+    - https://pek.sch.bme.hu/
+  - labels:
+      job: blackbox
+      service_name: sch-websites
+    targets:
+    - https://rvt.sch.bme.hu/
+  - labels:
+      job: blackbox
+      service_name: sch-websites
+    targets:
+    - https://rvtwiki.sch.bme.hu/
+  - labels:
+      job: blackbox
+      service_name: sch-websites
+    targets:
+    - https://sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: sch-websites
+    targets:
+    - https://www.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: sch-websites
+    targets:
+    - https://sssl.sch.bme.hu
+- job_name: kszk-websites@blackbox#http_2xx
+  metrics_path: /probe
+  params:
+    module:
+    - http_2xx
+  relabel_configs:
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - source_labels:
+    - __param_target
+    target_label: instance
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - http://adfs-1.sch.bme.hu/adfs/probe
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - http://adfs-2.sch.bme.hu/adfs/probe
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://adfs.sch.bme.hu/adfs/ls/IdpInitiatedSignon.aspx
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://admin.sch.bme.hu/message
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://auth.k8s.sch.bme.hu/healthz
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://auth.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://git.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://home.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://horizont.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://intro.kszk.bme.hu/
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://jatszohaz.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://kszk.sch.bme.hu/
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://kszk.sch.bme.hu/wiki/doku.php?id=neteam:start
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://kubectl.k8s.sch.bme.hu/
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://lists.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://lothlorien-ng.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://sentry.kszk.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://sssl.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://support.sch.bme.hu
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://vik.wiki
+  - labels:
+      job: blackbox
+      service_name: kszk-websites
+    targets:
+    - https://wadon-ng.sch.bme.hu
+- job_name: mososgep@mosogep
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: mosogep-exporter
+      job: mosogep
+      service_name: mososgep
+    targets:
+    - mosogep-exporter:8080
+- job_name: wind@json
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: wind
+      job: json
+      service_name: wind
+    targets:
+    - prometheus-wind-exporter:9158
+- job_name: temperature@json
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: temperature
+      job: json
+      service_name: temperature
+    targets:
+    - prometheus-temperature-exporter:7979
+- job_name: server-room-ups@ups
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: Eaton 5PX G097C32048
+      job: ups
+      service_name: server-room-ups
+    targets:
+    - prometheus-upsc-exporter-1:9614
+  - labels:
+      instance_renamer: Eaton 5PX G097C32049
+      job: ups
+      service_name: server-room-ups
+    targets:
+    - prometheus-upsc-exporter-2:9614
+  - labels:
+      instance_renamer: Eaton 5PX Y097B10073
+      job: ups
+      service_name: server-room-ups
+    targets:
+    - prometheus-upsc-exporter-3:9614
+- job_name: beckett@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: beckett
+      job: ping
+      service_name: beckett
+    targets:
+    - 10.0.71.102
+- job_name: beckett@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: beckett
+      job: node
+      service_name: beckett
+    targets:
+    - 10.0.71.102:9100
+- job_name: beckett@apache
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: beckett
+      job: apache
+      service_name: beckett
+    targets:
+    - 10.0.71.102:9117
+- job_name: beckett@postfix
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: beckett
+      job: postfix
+      service_name: beckett
+    targets:
+    - 10.0.71.102:9154
+- job_name: trash@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: trash
+      job: ping
+      service_name: trash
+    targets:
+    - 152.66.209.79
+- job_name: trash@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: trash
+      job: node
+      service_name: trash
+    targets:
+    - 152.66.209.79:9100
+- job_name: dc-1@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: dc-1
+      job: ping
+      service_name: dc-1
+    targets:
+    - dc-1.sch.bme.hu
+- job_name: makeshift-router@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: makeshift-router
+      job: ping
+      service_name: makeshift-router
+    targets:
+    - 152.66.208.56
+- job_name: zorp@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: zorp-node1
+      job: node
+      service_name: zorp
+    targets:
+    - 10.0.208.152:9100
+  - labels:
+      instance_renamer: zorp-node2
+      job: node
+      service_name: zorp
+    targets:
+    - 10.0.208.153:9100
+  - labels:
+      instance_renamer: zorp-node3
+      job: node
+      service_name: zorp
+    targets:
+    - 10.0.208.154:9100
+- job_name: dns@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: avian-recursor
+      job: ping
+      service_name: dns
+    targets:
+    - 152.66.208.1
+  - labels:
+      instance_renamer: avian-authoritative
+      job: ping
+      service_name: dns
+    targets:
+    - 152.66.208.9
+  - labels:
+      instance_renamer: neogamora-recursor
+      job: ping
+      service_name: dns
+    targets:
+    - 152.66.208.29
+  - labels:
+      instance_renamer: neogamora-authoritative
+      job: ping
+      service_name: dns
+    targets:
+    - 152.66.208.26
+- job_name: dns@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: avian
+      job: node
+      service_name: dns
+    targets:
+    - 10.0.208.1:9100
+  - labels:
+      instance_renamer: neogamora-recursor
+      job: node
+      service_name: dns
+    targets:
+    - 10.0.208.29:9100
+  - labels:
+      instance_renamer: neogamora-authoritative
+      job: node
+      service_name: dns
+    targets:
+    - 10.0.208.26:9100
+- job_name: dns@bind9
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  scrape_interval: 15s
+  static_configs:
+  - labels:
+      instance_renamer: avian
+      job: bind9
+      service_name: dns
+    targets:
+    - 10.0.208.1:9119
+  - labels:
+      instance_renamer: neogamora-recursor
+      job: bind9
+      service_name: dns
+    targets:
+    - 10.0.208.29:9119
+  - labels:
+      instance_renamer: neogamora-authoritative
+      job: bind9
+      service_name: dns
+    targets:
+    - 10.0.208.26:9119
+- job_name: polaris@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: polaris
+      job: ping
+      service_name: polaris
+    targets:
+    - 152.66.209.110
+- job_name: vpn@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: vpn
+      job: node
+      service_name: vpn
+    targets:
+    - 10.0.210.130:9100
+- job_name: vpn@softether
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  scrape_interval: 30s
+  static_configs:
+  - labels:
+      instance_renamer: vpn
+      job: softether
+      service_name: vpn
+    targets:
+    - 10.0.210.130:9411
+- job_name: noc@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: noc-a
+      job: ping
+      service_name: noc
+    targets:
+    - 10.0.208.241
+  - labels:
+      instance_renamer: noc-b
+      job: ping
+      service_name: noc
+    targets:
+    - 10.0.208.242
+- job_name: noc@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: noc-a
+      job: node
+      service_name: noc
+    targets:
+    - 10.0.208.241:9100
+  - labels:
+      instance_renamer: noc-b
+      job: node
+      service_name: noc
+    targets:
+    - 10.0.208.242:9100
+- job_name: routing@snmp#sch_core_net_minimal_mibs
+  metrics_path: /snmp
+  params:
+    module:
+    - sch_core_net_minimal_mibs
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: 10.0.208.242:9116
+    target_label: __address__
+  scrape_interval: 30s
+  scrape_timeout: 25s
+  static_configs:
+  - labels:
+      instance_renamer: rtr-1
+      job: snmp
+      service_name: routing
+    targets:
+    - 172.20.208.253
+- job_name: routing@snmp#sch_core_net_mibs
+  metrics_path: /snmp
+  params:
+    module:
+    - sch_core_net_mibs
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: 10.0.208.242:9116
+    target_label: __address__
+  scrape_interval: 65s
+  scrape_timeout: 55s
+  static_configs:
+  - labels:
+      instance_renamer: rtr-1
+      job: snmp
+      service_name: routing
+    targets:
+    - 172.20.208.253
+- job_name: access-switching@snmp#sch_core_net_minimal_mibs
+  metrics_path: /snmp
+  params:
+    module:
+    - sch_core_net_minimal_mibs
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: 10.0.208.242:9116
+    target_label: __address__
+  scrape_interval: 30s
+  scrape_timeout: 25s
+  static_configs:
+  - labels:
+      instance_renamer: sw-02
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.2
+  - labels:
+      instance_renamer: sw-05
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.5
+  - labels:
+      instance_renamer: sw-08
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.8
+  - labels:
+      instance_renamer: sw-11
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.11
+  - labels:
+      instance_renamer: sw-14
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.14
+  - labels:
+      instance_renamer: sw-17
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.17
+  - labels:
+      instance_renamer: sw-mgmt
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.172.20
+  - labels:
+      instance_renamer: sw-kszk
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.70
+- job_name: access-switching@snmp#sch_core_net_mibs
+  metrics_path: /snmp
+  params:
+    module:
+    - sch_core_net_mibs
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: 10.0.208.242:9116
+    target_label: __address__
+  scrape_interval: 65s
+  scrape_timeout: 55s
+  static_configs:
+  - labels:
+      instance_renamer: sw-02
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.2
+  - labels:
+      instance_renamer: sw-05
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.5
+  - labels:
+      instance_renamer: sw-08
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.8
+  - labels:
+      instance_renamer: sw-11
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.11
+  - labels:
+      instance_renamer: sw-14
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.14
+  - labels:
+      instance_renamer: sw-17
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.17
+  - labels:
+      instance_renamer: sw-mgmt
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.172.20
+  - labels:
+      instance_renamer: sw-kszk
+      job: snmp
+      service_name: access-switching
+    targets:
+    - 172.20.0.70
+- job_name: server-switching@snmp#sch_core_net_minimal_mibs
+  metrics_path: /snmp
+  params:
+    module:
+    - sch_core_net_minimal_mibs
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: 10.0.208.242:9116
+    target_label: __address__
+  scrape_interval: 30s
+  scrape_timeout: 25s
+  static_configs:
+  - labels:
+      instance_renamer: sw-server-01
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 172.20.0.40
+  - labels:
+      instance_renamer: sw-server-02
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 172.20.0.50
+  - labels:
+      instance_renamer: sw-admin-01
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 10.172.1.10
+  - labels:
+      instance_renamer: sw-admin-02
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 10.172.1.20
+  - labels:
+      instance_renamer: sw-salgo-rack
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 10.172.1.142
+  - labels:
+      instance_renamer: sw-salgo-rack-admin
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 10.172.1.145
+- job_name: server-switching@snmp#sch_core_net_mibs
+  metrics_path: /snmp
+  params:
+    module:
+    - sch_core_net_mibs
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: 10.0.208.242:9116
+    target_label: __address__
+  scrape_interval: 65s
+  scrape_timeout: 55s
+  static_configs:
+  - labels:
+      instance_renamer: sw-server-01
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 172.20.0.40
+  - labels:
+      instance_renamer: sw-server-02
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 172.20.0.50
+  - labels:
+      instance_renamer: sw-admin-01
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 10.172.1.10
+  - labels:
+      instance_renamer: sw-admin-02
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 10.172.1.20
+  - labels:
+      instance_renamer: sw-salgo-rack
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 10.172.1.142
+  - labels:
+      instance_renamer: sw-salgo-rack-admin
+      job: snmp
+      service_name: server-switching
+    targets:
+    - 10.172.1.145
+- job_name: outside@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: rax
+      job: ping
+      service_name: outside
+    targets:
+    - 152.66.0.11
+  - labels:
+      instance_renamer: rio
+      job: ping
+      service_name: outside
+    targets:
+    - 152.66.0.11
+  - labels:
+      instance_renamer: dns.google
+      job: ping
+      service_name: outside
+    targets:
+    - 8.8.8.8
+- job_name: beholder@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: beholder
+      job: node
+      service_name: beholder
+    targets:
+    - 10.0.208.117:9100
+- job_name: beholder@prometheus
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: beholder
+      job: prometheus
+      service_name: beholder
+    targets:
+    - localhost:9090
+- job_name: gns3-vpn@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: gns3-vpn
+      job: node
+      service_name: gns3-vpn
+    targets:
+    - 152.66.209.41:9100
+- job_name: lists@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: lists
+      job: node
+      service_name: lists
+    targets:
+    - 10.0.208.22:9100
+- job_name: lists@postgres
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: lists
+      job: postgres
+      service_name: lists
+    targets:
+    - 10.0.208.22:9187
+- job_name: lists@postfix
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: lists
+      job: postfix
+      service_name: lists
+    targets:
+    - 10.0.208.22:9154
+- job_name: guacamole@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: guacamole
+      job: node
+      service_name: guacamole
+    targets:
+    - 152.66.208.139:9100
+- job_name: salgovpn@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: salgovpn
+      job: node
+      service_name: salgovpn
+    targets:
+    - 10.0.211.213:9100
+- job_name: nexus@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: nexus
+      job: node
+      service_name: nexus
+    targets:
+    - 10.0.209.229:9100
+- job_name: nexus@apache
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: nexus
+      job: apache
+      service_name: nexus
+    targets:
+    - 10.0.209.229:9117
+- job_name: wadon-ng@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: wadon-ng
+      job: node
+      service_name: wadon-ng
+    targets:
+    - 10.0.208.5:9100
+- job_name: devteam-prod@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: devteam-prod
+      job: node
+      service_name: devteam-prod
+    targets:
+    - devteam-prod.sch.bme.hu:9100
+- job_name: hepa@postfix
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: hepa
+      job: postfix
+      service_name: hepa
+    targets:
+    - 10.0.208.193:9154
+- job_name: hepa@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: hepa
+      job: node
+      service_name: hepa
+    targets:
+    - 10.0.208.193:9100
+- job_name: lothlorien-ng@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: lothlorien-ng
+      job: node
+      service_name: lothlorien-ng
+    targets:
+    - 10.0.208.34:9100
+- job_name: vmware@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: node4
+      job: ping
+      service_name: vmware
+    targets:
+    - 10.152.208.134
+  - labels:
+      instance_renamer: node5
+      job: ping
+      service_name: vmware
+    targets:
+    - 10.152.208.135
+  - labels:
+      instance_renamer: node6
+      job: ping
+      service_name: vmware
+    targets:
+    - 10.152.208.136
+  - labels:
+      instance_renamer: node7
+      job: ping
+      service_name: vmware
+    targets:
+    - 10.152.208.137
+  - labels:
+      instance_renamer: node8
+      job: ping
+      service_name: vmware
+    targets:
+    - 10.152.208.138
+  - labels:
+      instance_renamer: node9
+      job: ping
+      service_name: vmware
+    targets:
+    - 10.152.208.139
+- honor_labels: true
+  job_name: vmware@vmware
+  metrics_path: /metrics
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  scheme: http
+  scrape_interval: 4m
+  scrape_timeout: 2m
+  static_configs:
+  - labels:
+      instance_renamer: horizont
+      job: vmware
+      service_name: vmware
+      vmware_cluster_name: horizont
+    targets:
+    - prometheus-vmware-exporter:9272
+- honor_labels: true
+  job_name: sch@kubernetes
+  metrics_path: /prometheus/federate
+  params:
+    match[]:
+    - '{job=~".+"}'
+  scheme: https
+  static_configs:
+  - labels:
+      cluster_name: kszk-k8s
+      job: kubernetes
+      service_name: sch
+    targets:
+    - monitoring.k8s.sch.bme.hu
+  tls_config:
+    insecure_skip_verify: true
+- job_name: hyperv@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: hyperv-host-1
+      job: ping
+      service_name: hyperv
+    targets:
+    - hyperv-host-1.sch.bme.hu
+  - labels:
+      instance_renamer: hyperv-host-2
+      job: ping
+      service_name: hyperv
+    targets:
+    - hyperv-host-2.sch.bme.hu
+  - labels:
+      instance_renamer: hyperv-host-3
+      job: ping
+      service_name: hyperv
+    targets:
+    - hyperv-host-3.sch.bme.hu
+- job_name: memoryab@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: memory-alpha
+      job: ping
+      service_name: memoryab
+    targets:
+    - 10.0.208.49
+  - labels:
+      instance_renamer: memory-beta
+      job: ping
+      service_name: memoryab
+    targets:
+    - 10.0.208.50
+- job_name: fuji-storage@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: fuji-storage
+      job: ping
+      service_name: fuji-storage
+    targets:
+    - 10.0.208.200
+- job_name: hp-storage@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: hp-storage
+      job: ping
+      service_name: hp-storage
+    targets:
+    - 10.0.208.67
+- job_name: behemoth@ping#icmp_ipv4
+  metrics_path: /probe
+  params:
+    module:
+    - icmp_ipv4
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  - source_labels:
+    - __address__
+    target_label: __param_target
+  - replacement: prometheus-blackbox-exporter:9115
+    target_label: __address__
+  static_configs:
+  - labels:
+      instance_renamer: behemoth-ng
+      job: ping
+      service_name: behemoth
+    targets:
+    - 152.66.208.212
+- job_name: behemoth@node
+  relabel_configs:
+  - source_labels:
+    - instance_renamer
+    target_label: instance
+  - action: labeldrop
+    regex: instance_renamer
+  static_configs:
+  - labels:
+      instance_renamer: behemoth-ng
+      job: node
+      service_name: behemoth
+    targets:
+    - 10.0.208.212:9100

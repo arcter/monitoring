@@ -1,0 +1,23 @@
+---
+- name: Copy config
+  become: true
+  copy:
+    src: files/etc/alertmanager
+    dest: /etc/
+    owner: root
+    group: root
+    mode: 0655
+
+- name: Create alertmanager container
+  containers.podman.podman_container:
+    name: alertmanager
+    image: prom/alertmanager:latest
+    state: started
+    publish:
+      - 0.0.0.0:9093:9093
+    volume:
+      - /etc/alertmanager/alertmanager.yml:/etc/alertmanager/config.yml
+      - /etc/alertmanager/template/:/etc/alertmanager/template/
+    command: "--config.file=/etc/alertmanager/config.yml"
+    log_options: path=/tmp/alertmanager.json
+    log_driver: k8s-file

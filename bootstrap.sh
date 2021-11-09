@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-AUTH="bootstrapper:6cDoVsyYzzDE6fLi5MTB"
+[[ ! -d .venv ]] && python3 -m venv .venv
+source .venv/bin/activate
 
-git clone \
-  https://${AUTH}@git.sch.bme.hu/kszk/sysadmin/ansible/ansci.git \
-  .template \
-  || (cd .template && git pull && git checkout woranhun-wheel)
+pip3 install ansible ansible-lint
 
-exec .template/playbook-template/bootstrap.sh
+ansible-galaxy install --force -r requirements.galaxy.yaml
+
+# to stay in our comfy virtualenv
+exec "${SHELL:bash}"

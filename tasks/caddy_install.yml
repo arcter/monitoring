@@ -15,7 +15,7 @@
 - name: Add the offical Caddy repository
   become: true
   ansible.builtin.apt_repository:
-    repo: deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    repo: "{{ item }}"
     state: present
   loop:
   -  deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
