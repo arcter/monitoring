@@ -1,1 +1,20 @@
 ---
+- name: Copy config
+  become: true
+  copy:
+    src: files/etc/prometheus
+    dest: /etc/
+    owner: root
+    group: root
+    mode: 0655
+
+- name: Create prometheus container
+  become: true
+  containers.podman.podman_container:
+    name: prometheus
+    image: prometheus:latest
+    state: started
+    publish:
+      - 0.0.0.0:9090:9090
+    volume:
+      - /etc/prometheus:/etc/prometheus

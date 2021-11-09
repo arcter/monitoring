@@ -1,0 +1,40 @@
+---
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'  
+    owner: root
+    group: root
+  loop:
+    - /mnt
+    - /mnt/grafana
+    - /etc/grafana
+
+- name: Copy files
+  copy:
+    src: "files/etc/grafana/{{ item }}"
+    dest: "/etc/grafana/{{ item }}"
+    mode: '0744'  
+    owner: root
+    group: root
+  loop:
+    - grafana.ini
+    - ldap.toml
+
+- name: Create grafana container
+  containers.podman.podman_container:
+    name: grafana
+    image: grafana/grafana
+    state: started
+    publish:
+      - 0.0.0.0:3000:3000
+    env:
+      GF_LDAP_BIND_PASSWORD: "{{ GF_LDAP_BIND_PASSWORD }} "
+#      GF_SERVER_ROOT_URL: "https://monitoring.kszk.bme.hu/grafana/"
+
+    volume:
+      - /mnt/grafana:/var/lib/grafana \
+      - /etc/grafana/grafana.ini:/etc/grafana/grafana.ini \
+      - /etc/grafana/ldap.toml:/etc/grafana/ldap.toml 
+    

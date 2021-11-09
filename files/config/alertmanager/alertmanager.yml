@@ -1,0 +1,206 @@
+# This file is generated. Some meta:
+# Time: 2021-06-24T16:53:21.348119
+# Host: runner-jzki11j--project-2817-concurrent-0
+# Data dir commiter: Miklós Tóth
+# Data dir commit hash: 5259e1a0c9a43bc77daf9826e32760bd7b003b65
+
+global:
+  resolve_timeout: 1m
+
+  # Relay with HEPA
+  smtp_smarthost: '152.66.208.193:25'
+  smtp_from: 'alertmanager@beholder.sch.bme.hu'
+  smtp_require_tls: false
+
+  slack_api_url: 'https://mattermost.kszk.bme.hu/hooks/ap7nte6sppy3pmfatb581tskqh'
+
+# The directory from which notification templates are read.
+templates:
+- '/etc/alertmanager/template/*.tmpl'
+
+# The root route on which each incoming alert enters.
+route:
+  group_by: ['alertname']
+
+  group_wait: 30s
+
+  # When the first notification was sent, wait 'group_interval' to send a batch
+  # of new alerts that started firing for that group.
+  group_interval: 5m
+
+  # If an alert has successfully been sent, wait 'repeat_interval' to resend them.
+  repeat_interval: 12h
+
+  # Default receiver
+  receiver: mm-fallback
+
+############################# Routing alerts #############################
+  routes:
+
+# first match will stop routing of the alert
+# except: "continue: true" is set
+
+  - match:
+      alertname: SystemdServiceCrashed
+      name: "fwupd-refresh.service"
+    receiver: mm-severity-3
+    continue: false
+
+
+### VMWare - VMWare related alerts  ####
+
+  - match:
+      service_name: vmware
+    receiver: mm-vmware
+    repeat_interval: 1w
+    continue: false
+
+  - match:
+      alertname: SystemdServiceCrashed
+      name: "prom@vmware-exporter.service"
+    receiver: mm-vmware
+    repeat_interval: 1w
+    continue: false
+
+############## Routing alerts - default rule set ##############
+
+
+### Severity 1 - Mission-critical alerts  ####
+
+  - match:
+      alertname: InstanceDown
+    receiver: mm-severity-1
+    continue: true
+
+### Severity 2 - Actionable alerts with significant impact  ####
+
+  - match:
+      alertname: ProbeFailed
+    receiver: mm-severity-2
+    continue: true
+
+  - match:
+      alertname: HttpStatusCode
+    receiver: mm-severity-2
+    continue: true
+
+  - match:
+      alertname: SslCertificateExpired
+    receiver: mm-severity-2
+    continue: true
+
+  - match:
+      alertname: SystemdServiceCrashed
+    receiver: mm-severity-2
+    continue: true
+
+  - match:
+      alertname: OutOfMemory
+    receiver: mm-severity-2
+    continue: true
+
+  - match:
+      alertname: OutOfDiskSpace
+    receiver: mm-severity-2
+    continue: true
+
+### Severity 3 - Best effort, warnings ####
+
+  - match:
+      alertname: SslCertificateWillExpireSoon
+    receiver: mm-severity-3
+    continue: true
+
+###
+# Default receiver's palce
+# See: global route section
+# 'continue: true' will not trigger this
+###
+
+######################## Inhibitions #############################
+inhibit_rules:
+
+- target_match:
+    prometheus: "monitoring/prometheus-prometheus-oper-prometheus"
+
+# We use this to mute any warning-level notifications
+# if the same alert is already critical.
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'warning'
+  # Apply inhibition if the alertname is the same.
+  equal: ['alertname', 'service_name']
+
+######################## Receivers #############################
+# { { alertmanager_receivers } }
+receivers:
+
+- name: 'mm-fallback'
+  slack_configs:
+  - send_resolved: true
+    username: 'Alertmanager'
+    channel: '#alerts-fallback'
+
+    title: '{{ template "custom_title" . }}'
+    text: '{{ template "custom_slack_message" . }}'
+
+
+- name: 'mm-network'
+  slack_configs:
+  - send_resolved: true
+    username: 'Alertmanager'
+    channel: '#alerts-network'
+
+    title: '{{ template "custom_title" . }}'
+    text: '{{ template "custom_slack_message" . }}'
+
+
+- name: 'mm-severity-1'
+  slack_configs:
+  - send_resolved: true
+    username: 'Alertmanager'
+    channel: '#alerts-severity-1'
+
+    title: '{{ template "custom_title" . }}'
+    text: '{{ template "custom_slack_message" . }}'
+
+
+- name: 'mm-severity-2'
+  slack_configs:
+  - send_resolved: true
+    username: 'Alertmanager'
+    channel: '#alerts-severity-2'
+
+    title: '{{ template "custom_title" . }}'
+    text: '{{ template "custom_slack_message" . }}'
+
+
+- name: 'mm-severity-3'
+  slack_configs:
+  - send_resolved: true
+    username: 'Alertmanager'
+    channel: '#alerts-severity-3'
+
+    title: '{{ template "custom_title" . }}'
+    text: '{{ template "custom_slack_message" . }}'
+
+
+- name: 'mm-vmware'
+  slack_configs:
+  - send_resolved: true
+    username: 'Alertmanager'
+    channel: '#alerts-vmware'
+
+    title: '{{ template "custom_title" . }}'
+    text: '{{ template "custom_slack_message" . }}'
+
+
+- name: 'mm-test'
+  slack_configs:
+  - send_resolved: true
+    username: 'Alertmanager'
+    channel: '#test'
+
+    title: '{{ template "custom_title" . }}'
+    text: '{{ template "custom_slack_message" . }}'

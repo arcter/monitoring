@@ -1,0 +1,17 @@
+[[servers]]
+host = "dc-2.sch.bme.hu"
+port = 636
+use_ssl = true
+start_tls = false
+ssl_skip_verify = true
+bind_dn = "CN=_ldap_reader,OU=KSZK,OU=Hosts,DC=sch,DC=bme,DC=hu"
+bind_password = "${GF_LDAP_BIND_PASSWORD}"
+search_filter = "(sAMAccountName=%s)"
+search_base_dns = ["dc=sch,dc=bme,dc=hu"]
+
+[servers.attributes]
+name = "sn"
+surname = "givenName"
+username = "sAMAccountName"
+member_of = "memberOf"
+email =  "mail"
