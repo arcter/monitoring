@@ -1,6 +1,6 @@
 ---
 - name: Bootstrap monitor
-  hosts: monitor_arcter
+  hosts: monitor
   tasks: 
     - name: Apt updtate & upgrade
       become: true
@@ -15,19 +15,19 @@
       import_tasks: tasks/podman_config.yml
 
 - name: Set up Prometheus
-  hosts: monitor_arcter
+  hosts: monitor
   tasks:
     - name: Set up Prometheus container
       import_tasks: tasks/prometheus.yml
 
 - name: Set up Alertmanager
-  hosts: monitor_arcter
+  hosts: monitor
   tasks:
     - name: Set up Alertmanager container
       import_tasks: tasks/alertmanager.yml
 
 - name: Install & setup caddy
-  hosts: monitor_arcter
+  hosts: monitor
   tasks:
     - name: Install Caddy
       import_tasks: tasks/caddy_install.yml
@@ -54,7 +54,7 @@
         enabled: yes
         state: started
 - name: Setup Grafana
-  hosts: monitor_arcter
+  hosts: monitor
   become: True
   vars_files:
   - vars/secrets.yml

@@ -12,7 +12,7 @@
   become: true
   containers.podman.podman_container:
     name: prometheus
-    image: prometheus:latest
+    image: prom/prometheus:latest
     state: started
     publish:
       - 0.0.0.0:9090:9090

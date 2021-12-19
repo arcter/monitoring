@@ -30,7 +30,7 @@
     publish:
       - 0.0.0.0:3000:3000
     env:
-      GF_LDAP_BIND_PASSWORD: "{{ GF_LDAP_BIND_PASSWORD }} "
+#      GF_LDAP_BIND_PASSWORD: "{{ GF_LDAP_BIND_PASSWORD }} "
 #      GF_SERVER_ROOT_URL: "https://monitoring.kszk.bme.hu/grafana/"
 
     volume:
