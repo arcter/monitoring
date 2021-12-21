@@ -1,0 +1,11 @@
+groups:
+- name: PrometheusEvents
+  rules:
+  - alert: AlertManagerChangedUP
+    expr: up{instance="152.66.208.117:9093", job="prometheus"} == 1
+    for: 30s
+    labels:
+      severity: error
+    annotations:
+      identifier: '{{ $labels.instance }}'
+      description: "Alertmaanger changed state to up \n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
