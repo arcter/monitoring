@@ -22,7 +22,8 @@ alerting:
 rule_files:
   # - "alert-rules/*.yml"
 
+# 9090 -prometheus, 3000 - grafana, 9093 - alertmanager, 9100 - node exporter
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['localhost:9090', 'http://monitor.sch.bme.hu:3000','http://monitor.sch.bme.hu:9090', 'http://monitor.sch.bme.hu:9093','http://monitor.sch.bme.hu:9100']
