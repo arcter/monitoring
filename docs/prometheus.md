@@ -1,5 +1,7 @@
 # Prometheus
 
+Under Construction
+
 ## Mi ez?
 A felirakoztatott hosztok metrikáit kéri le , illetve adja át. A hosztokon exporter szükséges a metrikák lekérésére. Az adatokat egy lokális adat bázisban tárolja. Ez a tárolás csak rövid távú hosszú távra *Victoria Metrics*-et használunk az adatok jobb tömörítése végett.
 Az adatok elérésének két módja létezik írás és olvasás. Fontos megjegyezni hogy ha nem kérjük le az adatokat Prometheustól, az akkor is végig kérdezi a hosztokat.
