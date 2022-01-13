@@ -14,7 +14,7 @@
     - name: Configuring podman
       import_tasks: tasks/podman_config.yml
 
-    - name: Create grafana container
+    - name: Create VMWare exporter container
       vars_files:
       - /vars/vmware-user.yml
       containers.podman.podman_container:
