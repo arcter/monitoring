@@ -14,27 +14,17 @@
     - name: Configuring podman
       import_tasks: tasks/podman_config.yml
 
-- name: Create grafana container
-  containers.podman.podman_container:
-    name: prometheus-vmware-exporter
-    image: pryorda/vmware_exporter
-    state: started
-    publish:
-      - 0.0.0.0:9272:9272
-    env:
-      VSPHERE_USER=${VSPHERE_USERNAME}
-      VSPHERE_PASSWORD=${VSPHERE_PASSWORD}
-      VSPHERE_HOST=${VSPHERE_HOST}
-      VSPHERE_IGNORE_SSL=True
-    
-
-# docker run \
-# 	--rm \
-# 	--name prometheus-vmware-exporter \
-# 	--net prometheus \
-# 	--publish 127.0.0.1:9272:9272 \
-# 	-e VSPHERE_USER=${VSPHERE_USERNAME} \
-# 	-e VSPHERE_PASSWORD=${VSPHERE_PASSWORD} \
-# 	-e VSPHERE_HOST=${VSPHERE_HOST} \
-# 	-e VSPHERE_IGNORE_SSL=True \
-# 	pryorda/vmware_exporter
+    - name: Create grafana container
+      vars_files:
+      - /vars/vmware-user.yml
+      containers.podman.podman_container:
+        name: prometheus-vmware-exporter
+        image: pryorda/vmware_exporter
+        state: started
+        publish:
+          - 10.152.0.161:9272:9272
+        env:
+          VSPHERE_USER="{{VSPHERE_USERNAME}}"
+          VSPHERE_PASSWORD="{{VSPHERE_PASSWORD}}"
+          VSPHERE_HOST="{{VSPHERE_HOST}}"
+          VSPHERE_IGNORE_SSL=True
