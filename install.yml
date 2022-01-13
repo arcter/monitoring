@@ -26,33 +26,33 @@
     - name: Set up Alertmanager container
       import_tasks: tasks/alertmanager.yml
 
-- name: Install & setup caddy
-  hosts: monitor
-  tasks:
-    - name: Install Caddy
-      import_tasks: tasks/caddy_install.yml
-    - name: Stop Caddy
-      become: True
-      service:
-        name: caddy
-        state: stopped
-    - name: Copy config
-      become: true
-      copy:
-        src: files/etc/{{ item }}
-        dest: /etc/{{ item }}
-        owner: root
-        group: root
-        mode: 0755
-      with_fileglob:
-      - "caddy"
-    - name: Restart service
-      become: True
-      systemd:
-        name: caddy
-        masked: no
-        enabled: yes
-        state: started
+# - name: Install & setup caddy
+  # hosts: monitor
+  # tasks:
+  #   - name: Install Caddy
+  #     import_tasks: tasks/caddy_install.yml
+  #   - name: Stop Caddy
+  #     become: True
+  #     service:
+  #       name: caddy
+  #       state: stopped
+  #   - name: Copy config
+  #     become: true
+  #     copy:
+  #       src: files/etc/{{ item }}
+  #       dest: /etc/{{ item }}
+  #       owner: root
+  #       group: root
+  #       mode: 0755
+  #     with_fileglob:
+  #     - "caddy"
+  #   - name: Restart service
+  #     become: True
+  #     systemd:
+  #       name: caddy
+  #       masked: no
+  #       enabled: yes
+  #       state: started
 - name: Setup Grafana
   hosts: monitor
   become: True
