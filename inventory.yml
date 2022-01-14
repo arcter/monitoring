@@ -6,3 +6,6 @@ all:
         ansible_become: yes
         ansible_port: 10022
         hostname: monitor
+      vmware-exporter: 
+        ansible_host: 10.151.209.46
+        hostname: vmware-exporter

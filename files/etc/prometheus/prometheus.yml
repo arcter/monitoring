@@ -16,7 +16,7 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-            - localhost:9093
+            - 152.66.208.117:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:

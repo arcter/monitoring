@@ -1,30 +1,34 @@
----
 - name: Bootstrap monitor
-  hosts: monitor
-  tasks: 
+  hosts: vmware-exporter
+  vars_files:
+    - vars/vmware-user.yml
+  tasks:
     - name: Apt updtate & upgrade
       become: true
       apt:
         upgrade: yes
         update_cache: yes
 
+    - name: Set hostname
+      become: true
+      ansible.builtin.hostname:
+        name: "{{ hostname }}"
+
     - name: Install podman
       import_tasks: tasks/installpodman.yml
 
     - name: Configuring podman
+      become: true
       import_tasks: tasks/podman_config.yml
 
-    - name: Create VMWare exporter container
-      vars_files:
-      - /vars/vmware-user.yml
+    - name: Create container
       containers.podman.podman_container:
         name: prometheus-vmware-exporter
         image: pryorda/vmware_exporter
         state: started
         publish:
-          - 10.152.0.161:9272:9272
-        env:
-          VSPHERE_USER="{{VSPHERE_USERNAME}}"
+          - 10.151.209.46:9272:9272
+        env: VSPHERE_USER="{{VSPHERE_USERNAME}}"
           VSPHERE_PASSWORD="{{VSPHERE_PASSWORD}}"
           VSPHERE_HOST="{{VSPHERE_HOST}}"
           VSPHERE_IGNORE_SSL=True
