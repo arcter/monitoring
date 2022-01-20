@@ -1,0 +1,2 @@
+httpAuth_username: k8s
+httpAuth_password: "{{VM_pass}}"

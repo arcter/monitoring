@@ -1,64 +1,69 @@
----
+# ---
+# - name: Bootstrap monitor
+#   hosts: monitor
+#   tasks: 
+#     - name: Apt updtate & upgrade
+#       become: true
+#       apt:
+#         upgrade: yes
+#         update_cache: yes
+
+#     - name: Install podman
+#       import_tasks: tasks/installpodman.yml
+
+#     - name: Configuring podman
+#       import_tasks: tasks/podman_config.yml
+
+# - name: Set up Prometheus
+#   hosts: monitor
+#   tasks:
+#     - name: Set up Prometheus container
+#       import_tasks: tasks/prometheus.yml
+
+# - name: Set up Alertmanager
+#   hosts: monitor
+#   tasks:
+#     - name: Set up Alertmanager container
+#       import_tasks: tasks/alertmanager.yml
+
+# - name: Setup Grafana
+#   hosts: monitor
+#   become: True
+#   vars_files:
+#   - vars/secrets.yml
+#   tasks:
+#     - import_tasks: tasks/postgress.yml
+#     - import_tasks: tasks/grafana.yml
+
 - name: Bootstrap monitor
   hosts: monitor
-  tasks: 
-    - name: Apt updtate & upgrade
-      become: true
-      apt:
-        upgrade: yes
-        update_cache: yes
-
-    - name: Install podman
-      import_tasks: tasks/installpodman.yml
-
-    - name: Configuring podman
-      import_tasks: tasks/podman_config.yml
-
-- name: Set up Prometheus
-  hosts: monitor
-  tasks:
-    - name: Set up Prometheus container
-      import_tasks: tasks/prometheus.yml
-
-- name: Set up Alertmanager
-  hosts: monitor
-  tasks:
-    - name: Set up Alertmanager container
-      import_tasks: tasks/alertmanager.yml
-
-# - name: Install & setup caddy
-  # hosts: monitor
-  # tasks:
-  #   - name: Install Caddy
-  #     import_tasks: tasks/caddy_install.yml
-  #   - name: Stop Caddy
-  #     become: True
-  #     service:
-  #       name: caddy
-  #       state: stopped
-  #   - name: Copy config
-  #     become: true
-  #     copy:
-  #       src: files/etc/{{ item }}
-  #       dest: /etc/{{ item }}
-  #       owner: root
-  #       group: root
-  #       mode: 0755
-  #     with_fileglob:
-  #     - "caddy"
-  #   - name: Restart service
-  #     become: True
-  #     systemd:
-  #       name: caddy
-  #       masked: no
-  #       enabled: yes
-  #       state: started
-- name: Setup Grafana
-  hosts: monitor
-  become: True
   vars_files:
-  - vars/secrets.yml
-  tasks:
-    - import_tasks: tasks/postgress.yml
-    - import_tasks: tasks/grafana.yml
-    
+    - vars/secrets.yml
+    - vars/victoria_metrics.yaml
+  tasks: 
+
+  - name: make directories
+    become: true
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+      mode: '0755'  
+      owner: root
+      group: root
+    loop:
+      - /mnt
+      - /mnt/victoria-metrics-data
+
+  - name: Install VictoriMetrics
+    become: True
+    containers.podman.podman_container:
+      name: victoria-metrics
+      image: victoriametrics/victoria-metrics
+      state: started
+      publish:
+        - 0.0.0.0:8428:8428
+      volume:
+        -  /mnt/victoria-metrics-data:/victoria-metrics-data
+      command:
+        - "--httpAuth.username={{httpAuth_username}}"
+        - "--httpAuth.password={{httpAuth_password}}"
